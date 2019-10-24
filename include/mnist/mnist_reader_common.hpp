@@ -33,9 +33,6 @@ inline uint32_t read_header(const std::unique_ptr<char[]>& buffer, size_t positi
 void little_to_big_endian(char *buffer, auto size)
 {
     std::cout << "INFO: SPARC architecture: convert the buffer to BIG endian" << std::endl;
-    printf("%X %X %X %X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-    printf("%X %X %X %X\n", buffer[4], buffer[5], buffer[6], buffer[7]);
-
     for (auto i = 0; i < size; i+=4) {
         char tmp3 = buffer[i + 0];
         char tmp2 = buffer[i + 1];
@@ -46,10 +43,6 @@ void little_to_big_endian(char *buffer, auto size)
         buffer[i + 2] = tmp2;
         buffer[i + 3] = tmp3;
     }
-
-    printf("%X %X %X %X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-    printf("%X %X %X %X\n", buffer[4], buffer[5], buffer[6], buffer[7]);
-
 }
 #endif
 
