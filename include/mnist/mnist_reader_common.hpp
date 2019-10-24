@@ -28,6 +28,31 @@ inline uint32_t read_header(const std::unique_ptr<char[]>& buffer, size_t positi
     return (value << 24) | ((value << 8) & 0x00FF0000) | ((value >> 8) & 0X0000FF00) | (value >> 24);
 }
 
+#ifdef __sparc
+#include <algorithm>
+void little_to_big_endian(char *buffer, auto size)
+{
+    std::cout << "INFO: SPARC architecture: convert the buffer to BIG endian" << std::endl;
+    printf("%X %X %X %X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+    printf("%X %X %X %X\n", buffer[4], buffer[5], buffer[6], buffer[7]);
+
+    for (auto i = 0; i < size; i+=4) {
+        char tmp3 = buffer[i + 0];
+        char tmp2 = buffer[i + 1];
+        char tmp1 = buffer[i + 2];
+        char tmp0 = buffer[i + 3];
+        buffer[i + 0] = tmp0;
+        buffer[i + 1] = tmp1;
+        buffer[i + 2] = tmp2;
+        buffer[i + 3] = tmp3;
+    }
+
+    printf("%X %X %X %X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+    printf("%X %X %X %X\n", buffer[4], buffer[5], buffer[6], buffer[7]);
+
+}
+#endif
+
 /*!
  * \brief Read a MNIST file inside a raw buffer
  * \param path The path to the image file
@@ -48,6 +73,9 @@ inline std::unique_ptr<char[]> read_mnist_file(const std::string& path, uint32_t
     //Read the entire file at once
     file.seekg(0, std::ios::beg);
     file.read(buffer.get(), size);
+#ifdef __sparc
+    little_to_big_endian(buffer.get(), size);
+#endif
     file.close();
 
     auto magic = read_header(buffer, 0);
