@@ -3,6 +3,15 @@ mnist
 
 Simple C++ reader for MNIST dataset
 
+NEW
+---
+
+Dump test images and labels in a header file (`mnist_data.h`):
+
+```
+./dump_header.sh
+```
+
 Usage
 -----
 
